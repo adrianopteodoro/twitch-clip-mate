@@ -8,23 +8,25 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import axios from "axios";
 
-// Detect and install only Chromium for Playwright
+// Constants
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const PORT = process.env.PORT || 3000;
+
+// Install Chromium for Playwright
 try {
   console.log("Checking Playwright Chromium installation...");
   execSync("npx playwright install chromium", { stdio: "inherit" });
   console.log("Chromium is installed for Playwright.");
 } catch (error) {
   console.error("Failed to install Chromium for Playwright:", error);
-  process.exit(1); // Exit the process if installation fails
+  process.exit(1);
 }
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+// Initialize Express
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Swagger configuration
+// Swagger Configuration
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
@@ -34,14 +36,14 @@ const swaggerOptions = {
       description: "API documentation for Twitch Clip Player",
     },
   },
-  apis: [__filename], // Points to this file for API documentation
+  apis: [__filename],
 };
 
-// Middleware to dynamically set Swagger servers based on the current host
+// Middleware to dynamically set Swagger servers
 app.use((req, res, next) => {
   swaggerOptions.swaggerDefinition.servers = [
     {
-      url: `${req.protocol}://${req.headers.host}`,
+      url: `${req.protocol}://${req.hostname}`,
     },
   ];
   next();
@@ -50,16 +52,18 @@ app.use((req, res, next) => {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Configura Pug como engine de template
+// Configure Pug as the template engine
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-// Route for the index page
+// Routes
+
+// Index Page
 app.get("/", (req, res) => {
   res.render("index", { apiDocsUrl: `/api-docs` });
 });
 
-// Route to handle form submission for /get-mp4
+// Try /get-mp4 Endpoint
 app.get("/try-get-mp4", async (req, res) => {
   const embedUrl = req.query.url;
 
@@ -72,7 +76,7 @@ app.get("/try-get-mp4", async (req, res) => {
     const response = await axios.get(`${req.protocol}://${req.headers.host}/get-mp4`, {
       params: {
         url: embedUrl,
-        webplayer: false, // Ensure we get the JSON response with the MP4 URL
+        webplayer: false,
       },
     });
 
@@ -155,22 +159,20 @@ app.get("/try-get-mp4", async (req, res) => {
  */
 app.get("/get-mp4", async (req, res) => {
   let embedUrl = req.query.url;
-  const webplayer = req.query.webplayer === "true"; // Defaults to false if not provided
+  const webplayer = req.query.webplayer === "true";
   console.log(`Received request for /get-mp4 with URL: ${embedUrl}, webplayer: ${webplayer}`);
 
   if (!embedUrl) {
-    console.log("Missing URL parameter");
     return res.status(400).send("Missing URL parameter");
   }
 
   // Auto-add or replace the `parent` parameter
-  const appHost = req.hostname; // Use req.hostname to get the hostname without the port
+  const appHost = req.hostname;
   const parentParam = `&parent=${appHost}`;
-  if (embedUrl.includes("&parent=")) {
-    embedUrl = embedUrl.replace(/&parent=[^&]*/, parentParam); // Replace existing `parent`
-  } else {
-    embedUrl += parentParam; // Add `parent` if not present
-  }
+  embedUrl = embedUrl.includes("&parent=")
+    ? embedUrl.replace(/&parent=[^&]*/, parentParam)
+    : embedUrl + parentParam;
+
   console.log(`Updated embed URL with parent: ${embedUrl}`);
 
   try {
@@ -182,7 +184,7 @@ app.get("/get-mp4", async (req, res) => {
     let foundUrl = null;
 
     // Add a timeout to detect invalid `parent` parameter
-    const navigationTimeout = 10000; // 10 seconds
+    const navigationTimeout = 10000;
     let navigationError = false;
 
     page.on("response", async (response) => {
@@ -208,19 +210,16 @@ app.get("/get-mp4", async (req, res) => {
     }
 
     while (!foundUrl) {
-      await new Promise((resolve) => setTimeout(resolve, 100)); // Wait for the mp4 URL to be detected
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     await page.close();
     await browser.close();
-    console.log("Page closed");
 
     if (foundUrl) {
       if (webplayer) {
-        // Render the Pug template for the web player
         return res.render("video-player", { videoSrc: foundUrl });
       } else {
-        // Return JSON response with the MP4 URL
         return res.json({ mp4Url: foundUrl });
       }
     } else {
@@ -232,6 +231,7 @@ app.get("/get-mp4", async (req, res) => {
   }
 });
 
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`API documentation available at http://localhost:${PORT}/api-docs`);
