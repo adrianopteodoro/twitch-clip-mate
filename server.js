@@ -7,13 +7,13 @@ import { dirname } from "path";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
-// Detect and install Playwright browsers if not installed
+// Detect and install only Chromium for Playwright
 try {
-  console.log("Checking Playwright browser installation...");
-  execSync("npx playwright install", { stdio: "inherit" });
-  console.log("Playwright browsers are installed.");
+  console.log("Checking Playwright Chromium installation...");
+  execSync("npx playwright install chromium", { stdio: "inherit" });
+  console.log("Chromium is installed for Playwright.");
 } catch (error) {
-  console.error("Failed to install Playwright browsers:", error);
+  console.error("Failed to install Chromium for Playwright:", error);
   process.exit(1); // Exit the process if installation fails
 }
 
