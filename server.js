@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import axios from "axios";
 
 // Detect and install only Chromium for Playwright
 try {
@@ -61,42 +62,29 @@ app.get("/", (req, res) => {
 // Route to handle form submission for /get-mp4
 app.get("/try-get-mp4", async (req, res) => {
   const embedUrl = req.query.url;
+
   if (!embedUrl) {
     return res.render("index", { error: "Please provide a valid URL.", apiDocsUrl: `/api-docs` });
   }
 
   try {
-    const browser = await chromium.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
-    let foundUrl = null;
-
-    page.on("response", async (response) => {
-      const url = response.url();
-      if (url.includes(".mp4") && !foundUrl) {
-        foundUrl = url;
-      }
+    // Call the /get-mp4 endpoint with webplayer=false to get the MP4 URL
+    const response = await axios.get(`${req.protocol}://${req.headers.host}/get-mp4`, {
+      params: {
+        url: embedUrl,
+        webplayer: false, // Ensure we get the JSON response with the MP4 URL
+      },
     });
 
-    await page.goto(embedUrl, { waitUntil: "networkidle" });
+    const mp4Url = response.data.mp4Url;
 
-    while (!foundUrl) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    await page.close();
-    await browser.close();
-
-    if (foundUrl) {
-      return res.render("index", { videoSrc: foundUrl, apiDocsUrl: `/api-docs` });
-    } else {
-      return res.render("index", { error: "No .mp4 URL found.", apiDocsUrl: `/api-docs` });
-    }
+    // Render the video player with the retrieved MP4 URL
+    return res.render("index", { videoSrc: mp4Url, apiDocsUrl: `/api-docs` });
   } catch (error) {
-    console.error(`Error: ${error}`);
-    return res.render("index", { error: "An error occurred while processing the URL.", apiDocsUrl: `/api-docs` });
+    console.error(`Error fetching MP4 URL: ${error.message}`);
+    const errorMessage =
+      error.response && error.response.data ? error.response.data : "An error occurred while processing the URL.";
+    return res.render("index", { error: errorMessage, apiDocsUrl: `/api-docs` });
   }
 });
 
@@ -123,6 +111,10 @@ app.get("/try-get-mp4", async (req, res) => {
  *          https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v
  *          ```
  *       4. Use the extracted URL as the `url` query parameter.
+ *       
+ *       ### Webplayer Flag:
+ *       - If `webplayer` is set to `true`, the endpoint renders a web player using a Pug template.
+ *       - If `webplayer` is omitted or set to `false`, the endpoint returns a JSON response with the MP4 URL.
  *     parameters:
  *       - in: query
  *         name: url
@@ -131,6 +123,13 @@ app.get("/try-get-mp4", async (req, res) => {
  *         required: true
  *         description: The Twitch embed URL to extract the MP4 from.
  *         example: "https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v"
+ *       - in: query
+ *         name: webplayer
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Flag to determine the response type. If `true`, renders a web player. Defaults to `false`.
+ *         example: true
  *     responses:
  *       200:
  *         description: Successfully retrieved the MP4 URL
@@ -138,6 +137,15 @@ app.get("/try-get-mp4", async (req, res) => {
  *           text/html:
  *             schema:
  *               type: string
+ *               description: HTML content for the web player (if `webplayer` is `true`).
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mp4Url:
+ *                   type: string
+ *                   description: The extracted MP4 URL.
+ *                   example: "https://example.com/path/to/clip.mp4"
  *       400:
  *         description: Missing or invalid URL parameter
  *       404:
@@ -147,7 +155,8 @@ app.get("/try-get-mp4", async (req, res) => {
  */
 app.get("/get-mp4", async (req, res) => {
   const embedUrl = req.query.url;
-  console.log(`Received request for /get-mp4 with URL: ${embedUrl}`);
+  const webplayer = req.query.webplayer === "true"; // Defaults to false if not provided
+  console.log(`Received request for /get-mp4 with URL: ${embedUrl}, webplayer: ${webplayer}`);
 
   if (!embedUrl) {
     console.log("Missing URL parameter");
@@ -180,10 +189,17 @@ app.get("/get-mp4", async (req, res) => {
     await page.close();
     await browser.close();
     console.log("Page closed");
+
     if (foundUrl) {
-      res.render("video-player", { videoSrc: foundUrl });
+      if (webplayer) {
+        // Render the Pug template for the web player
+        return res.render("video-player", { videoSrc: foundUrl });
+      } else {
+        // Return JSON response with the MP4 URL
+        return res.json({ mp4Url: foundUrl });
+      }
     } else {
-      res.status(404).send("No .mp4 URL found.");
+      return res.status(404).send("No .mp4 URL found.");
     }
   } catch (error) {
     console.error(`Error executing Playwright script: ${error}`);
