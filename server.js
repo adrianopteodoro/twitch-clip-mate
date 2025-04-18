@@ -154,7 +154,7 @@ app.get("/try-get-mp4", async (req, res) => {
  *         description: Error executing Playwright script
  */
 app.get("/get-mp4", async (req, res) => {
-  const embedUrl = req.query.url;
+  let embedUrl = req.query.url;
   const webplayer = req.query.webplayer === "true"; // Defaults to false if not provided
   console.log(`Received request for /get-mp4 with URL: ${embedUrl}, webplayer: ${webplayer}`);
 
@@ -162,6 +162,16 @@ app.get("/get-mp4", async (req, res) => {
     console.log("Missing URL parameter");
     return res.status(400).send("Missing URL parameter");
   }
+
+  // Auto-add or replace the `parent` parameter
+  const appHost = req.hostname; // Use req.hostname to get the hostname without the port
+  const parentParam = `&parent=${appHost}`;
+  if (embedUrl.includes("&parent=")) {
+    embedUrl = embedUrl.replace(/&parent=[^&]*/, parentParam); // Replace existing `parent`
+  } else {
+    embedUrl += parentParam; // Add `parent` if not present
+  }
+  console.log(`Updated embed URL with parent: ${embedUrl}`);
 
   try {
     const browser = await chromium.launch({
@@ -171,6 +181,10 @@ app.get("/get-mp4", async (req, res) => {
     const page = await browser.newPage();
     let foundUrl = null;
 
+    // Add a timeout to detect invalid `parent` parameter
+    const navigationTimeout = 10000; // 10 seconds
+    let navigationError = false;
+
     page.on("response", async (response) => {
       const url = response.url();
       if (url.includes(".mp4") && !foundUrl) {
@@ -179,8 +193,19 @@ app.get("/get-mp4", async (req, res) => {
       }
     });
 
-    await page.goto(embedUrl, { waitUntil: "networkidle" });
-    console.log(`Navigated to URL: ${embedUrl}`);
+    try {
+      await page.goto(embedUrl, { waitUntil: "networkidle", timeout: navigationTimeout });
+      console.log(`Navigated to URL: ${embedUrl}`);
+    } catch (error) {
+      console.error(`Navigation error: ${error.message}`);
+      navigationError = true;
+    }
+
+    if (navigationError) {
+      await page.close();
+      await browser.close();
+      return res.status(400).send("Invalid parent parameter or embed URL.");
+    }
 
     while (!foundUrl) {
       await new Promise((resolve) => setTimeout(resolve, 100)); // Wait for the mp4 URL to be detected
