@@ -32,14 +32,19 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API documentation for Twitch Clip Player",
     },
-    servers: [
-      {
-        url: `http://localhost:${PORT}`,
-      },
-    ],
   },
   apis: [__filename], // Points to this file for API documentation
 };
+
+// Middleware to dynamically set Swagger servers based on the current host
+app.use((req, res, next) => {
+  swaggerOptions.swaggerDefinition.servers = [
+    {
+      url: `${req.protocol}://${req.headers.host}`,
+    },
+  ];
+  next();
+});
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
