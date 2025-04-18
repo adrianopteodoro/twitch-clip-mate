@@ -1,0 +1,40 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='Content-Type', content='text/html; charset=windows-1252')
+    title Streamer.bot Shoutout player
+    style.
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #videocontainer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+        text-align: center;
+      }
+      #videoplayer {
+        width: 100%;
+      }
+  body
+    #videocontainer
+      video#videoplayer(autoplay)
+        source(src=videoSrc type='video/mp4')
+    script(defer).
+      document.addEventListener("DOMContentLoaded", function() {
+          const videoElement = document.getElementById('videoplayer');
+          const playPromise = videoElement.play() || Promise.reject('');
+          playPromise.then(() => {
+            // Video could be autoplayed, do nothing.
+          }).catch(err => {
+            // Video couldn't be autoplayed because of autoplay policy. Mute it and play.
+            videoElement.muted = true;
+            videoElement.play();
+          });
+      });
