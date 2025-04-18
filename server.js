@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import express from "express";
 import path from "path";
 import { chromium } from "playwright";
@@ -5,6 +6,16 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+
+// Detect and install Playwright browsers if not installed
+try {
+  console.log("Checking Playwright browser installation...");
+  execSync("npx playwright install", { stdio: "inherit" });
+  console.log("Playwright browsers are installed.");
+} catch (error) {
+  console.error("Failed to install Playwright browsers:", error);
+  process.exit(1); // Exit the process if installation fails
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
