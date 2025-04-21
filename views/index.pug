@@ -8,7 +8,8 @@ html
       body {
         background-color: #f8f9fa;
         color: #212529;
-        font-family: Arial, sans-serif;
+        font-family: 'Roboto', Arial, sans-serif;
+        padding-top: 20px;
       }
       #videoplayer {
         border: 2px solid #007bff;
@@ -16,7 +17,7 @@ html
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         max-width: 100%; /* Ensure the video stays within container boundaries */
         display: block; /* Center the video */
-        margin: 0 auto; /* Center the video */
+        margin: 20px auto; /* Center the video */
       }
       #loading-indicator {
         display: flex;
@@ -37,6 +38,27 @@ html
       .download-container {
         text-align: center; /* Center the download button */
         margin-top: 15px;
+      }
+      .hero {
+        background-color: #007bff;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .hero p {
+        font-size: 1.2rem;
+      }
+      .form-container {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
       }
 
       /* Dark mode styles */
@@ -77,6 +99,13 @@ html
         button.btn-success:hover {
           background-color: #16a34a;
           border-color: #16a34a;
+        }
+        .hero {
+          background-color: #4f46e5;
+        }
+        .form-container {
+          background-color: #2a2a3b;
+          color: #e4e4e7;
         }
       }
     script.
@@ -141,40 +170,37 @@ html
         }
       }
   body
-    .container.mt-5
-      h1.text-center= welcome
-      p.text-center= usage_instructions
+    .container
+      .hero
+        h1= welcome
+        p= usage_instructions
 
-      // Explanation for getting embed URL
-      .alert.alert-info
-        h4= how_to_get_embed_url
-        p= detailed_instructions
-        ol
-          li= step_1
-          li= step_2
-          li= step_3
-          li= step_4
-          li= step_5
-          li= step_6
-          li= step_7
+      .form-container
+        .alert.alert-info
+          h4= how_to_get_embed_url
+          p= detailed_instructions
+          ol
+            li= step_1
+            li= step_2
+            li= step_3
+            li= step_4
+            li= step_5
+            li= step_6
+            li= step_7
 
-      // Button to API Docs
-      .text-center.mb-4
-        a.btn.btn-primary(href=apiDocsUrl, target="_blank")= view_api_docs
+        .text-center.mb-4
+          a.btn.btn-primary(href=apiDocsUrl, target="_blank")= view_api_docs
 
-      // Form to try /get-mp4
-      form(action="/get-mp4" method="get" onsubmit="handleFormSubmit(event)")
-        .mb-3
-          label(for="url")= enter_twitch_url
-          input.form-control(type="text" name="url" id="url" required)
-        button.btn.btn-success(type="submit")= try_it
+        form(action="/get-mp4" method="get" onsubmit="handleFormSubmit(event)")
+          .mb-3
+            label(for="url")= enter_twitch_url
+            input.form-control(type="text" name="url" id="url" required placeholder="Enter Twitch embed URL")
+          button.btn.btn-success(type="submit")= try_it
 
-      // Loading animation
       .text-center.mt-3
         div#loading-indicator.spinner-container(style="display: none;")
           div.spinner-border.text-primary(role="status")
           p= loading_message
 
-      // Display video or error
       #video-container.mt-4
       #error-container.mt-4
