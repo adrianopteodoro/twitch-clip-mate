@@ -13,6 +13,7 @@
         "step_7": "Cole o URL limpo no campo de entrada abaixo.",
         "view_api_docs": "Ver Documentação da API",
         "enter_twitch_url": "Insira o URL Incorporado do Twitch:",
+        "twitch_url_placeholder": "Cole o URL incorporado aqui",
         "try_it": "Experimente!",
         "loading_message": "Carregando seu vídeo...",
         "video_preview": "Pré-visualização do Vídeo",

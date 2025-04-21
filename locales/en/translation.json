@@ -13,6 +13,7 @@
         "step_7": "Paste the cleaned URL into the input field below.",
         "view_api_docs": "View API Documentation",
         "enter_twitch_url": "Enter Twitch Embed URL:",
+        "twitch_url_placeholder": "Paste the embed URL here",
         "try_it": "Try It",
         "loading_message": "Loading your video...",
         "video_preview": "Video Preview",

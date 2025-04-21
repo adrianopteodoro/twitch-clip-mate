@@ -157,7 +157,7 @@ html
           downloadButton.href = data.mp4Url;
           downloadButton.target = "_blank";
           downloadButton.className = "btn btn-primary";
-          downloadButton.textContent = "Download MP4";
+          downloadButton.textContent = "#{download_mp4}";
           downloadContainer.appendChild(downloadButton);
           videoContainer.appendChild(downloadContainer);
         } catch (error) {
@@ -194,7 +194,7 @@ html
         form(action="/get-mp4" method="get" onsubmit="handleFormSubmit(event)")
           .mb-3
             label(for="url")= enter_twitch_url
-            input.form-control(type="text" name="url" id="url" required placeholder="Enter Twitch embed URL")
+            input.form-control(type="text" name="url" id="url" required placeholder= twitch_url_placeholder)
           button.btn.btn-success(type="submit")= try_it
 
       .text-center.mt-3
