@@ -22,8 +22,8 @@ Twitch Clip Mate is a Node.js application that allows users to extract and play 
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/adrianopteodoro/twitch-clip-player.git
-   cd twitch-clip-player
+   git clone https://github.com/adrianopteodoro/twitch-clip-mate.git
+   cd twitch-clip-mate
    ```
 
 2. Install dependencies:
