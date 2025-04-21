@@ -1,22 +1,22 @@
 {
-  "index": {
-    "welcome": "Bem-vindo ao Twitch Clip Mate!",
-    "usage_instructions": "Use esta ferramenta para extrair e reproduzir URLs MP4 de links incorporados do Twitch.",
-    "how_to_get_embed_url": "Como Obter um URL Incorporado",
-    "detailed_instructions": "Para extrair o URL incorporado, siga estas etapas:",
-    "step_1": "1. Abra o clipe do Twitch que você deseja extrair.",
-    "step_2": "2. Clique no botão 'Compartilhar' abaixo do player de vídeo.",
-    "step_3": "3. Selecione 'Incorporar' nas opções de compartilhamento.",
-    "step_4": "4. Copie o código incorporado fornecido.",
-    "step_5": "5. Extraia o URL do atributo `src` no código incorporado.",
-    "step_6": "6. Remova o parâmetro `&parent` se ele existir.",
-    "step_7": "7. Cole o URL limpo no campo de entrada abaixo.",
-    "view_api_docs": "Ver Documentação da API",
-    "enter_twitch_url": "Insira o URL Incorporado do Twitch:",
-    "try_it": "Tente Agora",
-    "loading_message": "Carregando seu vídeo...",
-    "video_preview": "Pré-visualização do Vídeo",
-    "download_mp4": "Baixar MP4",
-    "error_message": "Ocorreu um erro. Por favor, tente novamente."
-  }
+    "index": {
+        "welcome": "Bem-vindo ao Twitch Clip Mate!",
+        "usage_instructions": "Use esta ferramenta para extrair e reproduzir URLs MP4 de links incorporados do Twitch.",
+        "how_to_get_embed_url": "Como Obter um URL Incorporado",
+        "detailed_instructions": "Para extrair o URL incorporado, siga estas etapas:",
+        "step_1": "Abra o clipe do Twitch que você deseja extrair.",
+        "step_2": "Clique no botão 'Compartilhar' abaixo do player de vídeo.",
+        "step_3": "Selecione 'Incorporar' nas opções de compartilhamento.",
+        "step_4": "Copie o código incorporado fornecido.",
+        "step_5": "Extraia o URL do atributo `src` no código incorporado.",
+        "step_6": "Remova o parâmetro `&parent` se ele existir.",
+        "step_7": "Cole o URL limpo no campo de entrada abaixo.",
+        "view_api_docs": "Ver Documentação da API",
+        "enter_twitch_url": "Insira o URL Incorporado do Twitch:",
+        "try_it": "Tente Agora",
+        "loading_message": "Carregando seu vídeo...",
+        "video_preview": "Pré-visualização do Vídeo",
+        "download_mp4": "Baixar MP4",
+        "error_message": "Ocorreu um erro. Por favor, tente novamente."
+    }
 }
