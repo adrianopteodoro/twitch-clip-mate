@@ -1,5 +1,10 @@
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default function swaggerDocs(app) {
   const swaggerOptions = {
@@ -11,7 +16,7 @@ export default function swaggerDocs(app) {
         description: "API documentation for Twitch Clip Mate",
       },
     },
-    apis: ["./routes/*.js"],
+    apis: [path.resolve(__dirname, "../routes/*.js")],
   };
 
   app.use((req, res, next) => {

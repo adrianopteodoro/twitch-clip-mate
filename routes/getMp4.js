@@ -4,7 +4,6 @@ import { chromium } from "playwright";
 
 const router = express.Router();
 
-// Try /get-mp4 Endpoint
 router.get("/try-get-mp4", async (req, res) => {
   const embedUrl = req.query.url;
 
@@ -29,7 +28,43 @@ router.get("/try-get-mp4", async (req, res) => {
   }
 });
 
-// Get MP4 Endpoint
+/**
+ * @swagger
+ * /get-mp4:
+ *   get:
+ *     summary: Get an MP4 URL from an embed URL.
+ *     description: This endpoint fetches an MP4 URL from the provided embed URL using Playwright.
+ *     parameters:
+ *       - in: query
+ *         name: url
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The embed URL to process.
+ *       - in: query
+ *         name: webplayer
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Whether to render the video in a web player.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the MP4 URL.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mp4Url:
+ *                   type: string
+ *                   description: The MP4 URL.
+ *       400:
+ *         description: Missing or invalid URL parameter.
+ *       404:
+ *         description: No MP4 URL found.
+ *       500:
+ *         description: Error executing Playwright script.
+ */
 router.get("/get-mp4", async (req, res) => {
   let embedUrl = req.query.url;
   const webplayer = req.query.webplayer === "true";
