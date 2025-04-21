@@ -6,9 +6,9 @@ export default function swaggerDocs(app) {
     swaggerDefinition: {
       openapi: "3.0.0",
       info: {
-        title: "Twitch Clip Player API",
+        title: "Twitch Clip Mate API",
         version: "1.0.0",
-        description: "API documentation for Twitch Clip Player",
+        description: "API documentation for Twitch Clip Mate",
       },
     },
     apis: ["./routes/*.js"],

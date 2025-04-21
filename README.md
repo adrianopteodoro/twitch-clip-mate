@@ -1,6 +1,6 @@
-# Twitch Clip Player
+# Twitch Clip Mate
 
-Twitch Clip Player is a Node.js application that allows users to extract and play MP4 URLs from Twitch embed links. It provides a simple web interface and an API for retrieving MP4 URLs from Twitch clips.
+Twitch Clip Mate is a Node.js application that allows users to extract and play MP4 URLs from Twitch embed links. It provides a simple web interface and an API for retrieving MP4 URLs from Twitch clips.
 
 ---
 
@@ -116,4 +116,4 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
 For questions or feedback, feel free to reach out:
 - **GitHub**: [https://github.com/adrianopteodoro](https://github.com/adrianopteodoro)
 
-Enjoy using **Twitch Clip Player**! 🎉
+Enjoy using **Twitch Clip Mate**! 🎉

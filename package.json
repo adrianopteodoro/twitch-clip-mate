@@ -1,7 +1,7 @@
 {
-  "name": "twitch-clip-player",
+  "name": "twitch-clip-mate",
   "version": "1.0.0",
-  "description": "Twitch Clip Player API",
+  "description": "Twitch Clip Mate - Extract and play Twitch clips with ease.",
   "main": "server.js",
   "type": "module",
   "scripts": {
