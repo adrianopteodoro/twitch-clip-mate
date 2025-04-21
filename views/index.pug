@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Twitch Clip Mate
+    title= welcome
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css")
     style.
       /* Light mode styles */
@@ -14,6 +14,9 @@ html
         border: 2px solid #007bff;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 100%; /* Ensure the video stays within container boundaries */
+        display: block; /* Center the video */
+        margin: 0 auto; /* Center the video */
       }
       #loading-indicator {
         display: flex;
@@ -30,6 +33,10 @@ html
         margin-top: 10px;
         font-size: 1.2rem;
         color: #007bff;
+      }
+      .download-container {
+        text-align: center; /* Center the download button */
+        margin-top: 15px;
       }
 
       /* Dark mode styles */
@@ -73,11 +80,17 @@ html
         }
       }
     script.
-      function handleFormSubmit(event) {
+      async function handleFormSubmit(event) {
         event.preventDefault();
         const form = event.target;
         const urlInput = form.querySelector("#url");
         const loadingIndicator = document.querySelector("#loading-indicator");
+        const videoContainer = document.querySelector("#video-container");
+        const errorContainer = document.querySelector("#error-container");
+
+        // Clear previous results
+        videoContainer.innerHTML = "";
+        errorContainer.innerHTML = "";
 
         // Show loading animation
         loadingIndicator.style.display = "flex";
@@ -91,69 +104,77 @@ html
         } else {
           url += parentParam; // Add &parent
         }
-        urlInput.value = url;
 
-        // Submit the form
-        form.submit();
+        try {
+          // Fetch MP4 URL from /get-mp4
+          const response = await fetch(`/get-mp4?url=${encodeURIComponent(url)}`);
+          if (!response.ok) {
+            throw new Error(await response.text());
+          }
+          const data = await response.json();
+
+          // Display video
+          const videoElement = document.createElement("video");
+          videoElement.id = "videoplayer";
+          videoElement.controls = true;
+          videoElement.autoplay = true;
+          videoElement.innerHTML = `<source src="${data.mp4Url}" type="video/mp4">`;
+          videoContainer.appendChild(videoElement);
+
+          // Add download button
+          const downloadContainer = document.createElement("div");
+          downloadContainer.className = "download-container";
+          const downloadButton = document.createElement("a");
+          downloadButton.href = data.mp4Url;
+          downloadButton.target = "_blank";
+          downloadButton.className = "btn btn-primary";
+          downloadButton.textContent = "Download MP4";
+          downloadContainer.appendChild(downloadButton);
+          videoContainer.appendChild(downloadContainer);
+        } catch (error) {
+          // Display error message using translation
+          errorContainer.textContent = "#{error_message}";
+          errorContainer.classList.add("alert", "alert-danger", "text-center");
+        } finally {
+          // Hide loading animation
+          loadingIndicator.style.display = "none";
+        }
       }
   body
     .container.mt-5
-      h1.text-center Twitch Clip Mate
-      p.text-center Use this tool to extract and play MP4 URLs from Twitch embed links.
+      h1.text-center= welcome
+      p.text-center= usage_instructions
 
       // Explanation for getting embed URL
       .alert.alert-info
-        h4 How to Get an Embed URL
-        p To get an embed URL from a Twitch clip:
+        h4= how_to_get_embed_url
+        p= detailed_instructions
         ol
-          li Find the embed code for the clip, which looks like this:
-            pre
-              code
-                | &lt;iframe src="https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v&amp;parent=www.example.com" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620"&gt;&lt;/iframe&gt;
-          li Copy the value inside the `src` attribute:
-            pre
-              code https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v&parent=www.example.com
-          li Remove the `&parent` parameter if it exists (optional):
-            pre
-              code https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v
-          li Paste the extracted URL into the form below.
+          li= step_1
+          li= step_2
+          li= step_3
+          li= step_4
+          li= step_5
+          li= step_6
+          li= step_7
 
       // Button to API Docs
       .text-center.mb-4
-        a.btn.btn-primary(href=apiDocsUrl, target="_blank") View API Documentation
+        a.btn.btn-primary(href=apiDocsUrl, target="_blank")= view_api_docs
 
       // Form to try /get-mp4
-      form(action="/try-get-mp4" method="get" onsubmit="handleFormSubmit(event)")
+      form(action="/get-mp4" method="get" onsubmit="handleFormSubmit(event)")
         .mb-3
-          label(for="url") Enter Twitch Embed URL:
-          input.form-control(type="text" name="url" id="url" placeholder="https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v" required)
-        button.btn.btn-success(type="submit") Try It
+          label(for="url")= enter_twitch_url
+          input.form-control(type="text" name="url" id="url" required)
+        button.btn.btn-success(type="submit")= try_it
 
       // Loading animation
       .text-center.mt-3
         div#loading-indicator.spinner-container(style="display: none;")
           div.spinner-border.text-primary(role="status")
-          p Loading your video...
+          p= loading_message
 
       // Display video or error
-      if videoSrc
-        .mt-4
-          h3.text-center Video Preview
-          video#videoplayer(autoplay controls width="100%")
-            source(src=videoSrc type="video/mp4")
-          p.text-center
-            a.btn.btn-primary(href=videoSrc, target="_blank") Download MP4
-          script(defer).
-            document.addEventListener("DOMContentLoaded", function() {
-                const videoElement = document.getElementById('videoplayer');
-                const playPromise = videoElement.play() || Promise.reject('');
-                playPromise.then(() => {
-                    // Video could be autoplayed, do nothing.
-                }).catch(err => {
-                    // Video couldn't be autoplayed because of autoplay policy. Mute it and play.
-                    videoElement.muted = true;
-                    videoElement.play();
-                });
-            });
-      else if error
-        .mt-4.alert.alert-danger.text-center= error
+      #video-container.mt-4
+      #error-container.mt-4

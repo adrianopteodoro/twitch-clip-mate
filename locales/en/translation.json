@@ -1,0 +1,22 @@
+{
+  "index": {
+    "welcome": "Welcome to Twitch Clip Mate!",
+    "usage_instructions": "Use this tool to extract and play MP4 URLs from Twitch embed links.",
+    "how_to_get_embed_url": "How to Get an Embed URL",
+    "detailed_instructions": "To extract the embed URL, follow these steps:",
+    "step_1": "1. Open the Twitch clip you want to extract.",
+    "step_2": "2. Click the 'Share' button below the video player.",
+    "step_3": "3. Select 'Embed' from the sharing options.",
+    "step_4": "4. Copy the embed code provided.",
+    "step_5": "5. Extract the URL from the `src` attribute in the embed code.",
+    "step_6": "6. Remove the `&parent` parameter if it exists.",
+    "step_7": "7. Paste the cleaned URL into the input field below.",
+    "view_api_docs": "View API Documentation",
+    "enter_twitch_url": "Enter Twitch Embed URL:",
+    "try_it": "Try It",
+    "loading_message": "Loading your video...",
+    "video_preview": "Video Preview",
+    "download_mp4": "Download MP4",
+    "error_message": "An error occurred. Please try again."
+  }
+}

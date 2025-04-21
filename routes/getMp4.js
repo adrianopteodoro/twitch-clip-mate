@@ -4,30 +4,6 @@ import { chromium } from "playwright";
 
 const router = express.Router();
 
-router.get("/try-get-mp4", async (req, res) => {
-  const embedUrl = req.query.url;
-
-  if (!embedUrl) {
-    return res.render("index", { error: "Please provide a valid URL.", apiDocsUrl: `/api-docs` });
-  }
-
-  try {
-    const response = await axios.get(`${req.protocol}://${req.headers.host}/get-mp4`, {
-      params: {
-        url: embedUrl,
-        webplayer: false,
-      },
-    });
-
-    const mp4Url = response.data.mp4Url;
-    return res.render("index", { videoSrc: mp4Url, apiDocsUrl: `/api-docs` });
-  } catch (error) {
-    const errorMessage =
-      error.response && error.response.data ? error.response.data : "An error occurred while processing the URL.";
-    return res.render("index", { error: errorMessage, apiDocsUrl: `/api-docs` });
-  }
-});
-
 /**
  * @swagger
  * /get-mp4:

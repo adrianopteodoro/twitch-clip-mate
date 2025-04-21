@@ -2,10 +2,12 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import middleware from "i18next-http-middleware";
 import { installChromium } from "./utils/playwright.js";
 import swaggerDocs from "./utils/swagger.js";
 import indexRoutes from "./routes/index.js";
 import getMp4Routes from "./routes/getMp4.js";
+import i18next from "./utils/i18n.js";
 
 // Constants
 const __filename = fileURLToPath(import.meta.url);
@@ -17,6 +19,9 @@ installChromium();
 
 // Initialize Express
 const app = express();
+
+// Use i18next middleware
+app.use(middleware.handle(i18next));
 
 // Swagger Documentation
 swaggerDocs(app);
