@@ -2,7 +2,7 @@
     "index": {
         "welcome": "Bem-vindo ao Twitch Clip Mate!",
         "usage_instructions": "Use esta ferramenta para extrair e reproduzir URLs MP4 de links incorporados do Twitch.",
-        "how_to_get_embed_url": "Como Obter um URL Incorporado",
+        "how_to_get_embed_url": "Como obter um URL Incorporado",
         "detailed_instructions": "Para extrair o URL incorporado, siga estas etapas:",
         "step_1": "Abra o clipe do Twitch que você deseja extrair.",
         "step_2": "Clique no botão 'Compartilhar' abaixo do player de vídeo.",
@@ -13,7 +13,7 @@
         "step_7": "Cole o URL limpo no campo de entrada abaixo.",
         "view_api_docs": "Ver Documentação da API",
         "enter_twitch_url": "Insira o URL Incorporado do Twitch:",
-        "try_it": "Tente Agora",
+        "try_it": "Experimente!",
         "loading_message": "Carregando seu vídeo...",
         "video_preview": "Pré-visualização do Vídeo",
         "download_mp4": "Baixar MP4",
