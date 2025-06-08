@@ -91,7 +91,7 @@ router.get("/get-mp4", async (req, res) => {
       return res.status(400).json({ error: "Invalid parent parameter or embed URL" });
     }
 
-    const waitTimeout = 60000; // Maximum time to wait for the MP4 URL (15 seconds)
+    const waitTimeout = 120000; // Maximum time to wait for the MP4 URL (15 seconds)
     const startTime = Date.now();
 
     while (!foundUrl) {
@@ -100,7 +100,7 @@ router.get("/get-mp4", async (req, res) => {
         return res.status(404).json({ error: "Timeout waiting for MP4 URL" });
       }
       //debugLog("[DEBUG] Waiting for MP4 URL...");
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, navigationTimeout));
     }
 
     debugLog("[DEBUG] Browser closing...");
