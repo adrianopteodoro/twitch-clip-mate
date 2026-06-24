@@ -3,7 +3,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import middleware from "i18next-http-middleware";
-import { installChromium } from "./utils/playwright.js";
 import swaggerDocs from "./utils/swagger.js";
 import indexRoutes from "./routes/index.js";
 import getMp4Routes from "./routes/getMp4.js";
@@ -13,9 +12,6 @@ import i18next from "./utils/i18n.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PORT = process.env.PORT || 3000;
-
-// Install Chromium for Playwright
-installChromium();
 
 // Initialize Express
 const app = express();
