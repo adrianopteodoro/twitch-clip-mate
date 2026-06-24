@@ -64,7 +64,16 @@ router.get("/get-mp4", async (req, res) => {
 
   let browser;
   try {
-    browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
+    const launchOptions = {
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    };
+
+    if (process.env.CHROMIUM_EXECUTABLE_PATH) {
+      launchOptions.executablePath = process.env.CHROMIUM_EXECUTABLE_PATH;
+    }
+
+    browser = await chromium.launch(launchOptions);
     debugLog("[DEBUG] Browser launched");
 
     const page = await browser.newPage();

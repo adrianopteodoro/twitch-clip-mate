@@ -13,6 +13,14 @@
       "desc": "Port for the web interface",
       "required": true,
       "userEdit": false
+    },
+    "CHROMIUM_EXECUTABLE_PATH": {
+      "type": "string",
+      "value": "/usr/bin/chromium",
+      "display": "Chromium executable path",
+      "desc": "Path to an existing Chromium or Chrome binary installed on the host",
+      "required": true,
+      "userEdit": true
     }
   },
   "install": [
@@ -33,8 +41,7 @@
     {
       "type": "command",
       "commands": [
-        "npm install --omit=dev --no-audit --ignore-scripts",
-        "PLAYWRIGHT_BROWSERS_PATH=${ROOTDIR}/.cache/ms-playwright npm run install:playwright"
+        "npm install --omit=dev --no-audit --ignore-scripts"
       ]
     }
   ],
@@ -43,7 +50,8 @@
     "command": "npm start",
     "environmentVars": {
       "PORT": "${PORT}",
-      "PLAYWRIGHT_BROWSERS_PATH": "${ROOTDIR}/.cache/ms-playwright"
+      "PLAYWRIGHT_BROWSERS_PATH": "0",
+      "CHROMIUM_EXECUTABLE_PATH": "${CHROMIUM_EXECUTABLE_PATH}"
     },
     "stdin": {
       "type": "stdin"

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "postinstall": "playwright install --only-shell --no-progress chromium",
+    "postinstall": "echo \"Skipping Playwright browser download. Set CHROMIUM_EXECUTABLE_PATH or run npm run install:playwright if needed.\"",
     "install:playwright": "playwright install --only-shell --no-progress chromium"
   },
   "author": "",
