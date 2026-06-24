@@ -33,7 +33,8 @@
     {
       "type": "command",
       "commands": [
-        "npm install --omit=dev --no-audit"
+        "npm install --omit=dev --no-audit --ignore-scripts",
+        "npm run install:playwright"
       ]
     }
   ],
