@@ -34,7 +34,7 @@
       "type": "command",
       "commands": [
         "npm install --omit=dev --no-audit --ignore-scripts",
-        "npm run install:playwright"
+        "PLAYWRIGHT_BROWSERS_PATH=${ROOTDIR}/.cache/ms-playwright npm run install:playwright"
       ]
     }
   ],
@@ -42,7 +42,8 @@
   "run": {
     "command": "npm start",
     "environmentVars": {
-      "PORT": "${PORT}"
+      "PORT": "${PORT}",
+      "PLAYWRIGHT_BROWSERS_PATH": "${ROOTDIR}/.cache/ms-playwright"
     },
     "stdin": {
       "type": "stdin"
