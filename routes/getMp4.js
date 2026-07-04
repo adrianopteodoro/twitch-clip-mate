@@ -54,11 +54,19 @@ router.get("/get-mp4", async (req, res) => {
     return res.status(400).json({ error: "Missing URL parameter" });
   }
 
-  const appHost = req.hostname;
-  const parentParam = `&parent=${appHost}`;
-  const updatedEmbedUrl = embedUrl.includes("&parent=")
-    ? embedUrl.replace(/&parent=[^&]*/, parentParam)
-    : embedUrl + parentParam;
+  const forwardedHost = req.headers["x-forwarded-host"]?.split(",")?.[0]?.trim();
+  const hostCandidate = forwardedHost || req.hostname || req.get("host") || "";
+  const appHost = hostCandidate.replace(/:\d+$/, "");
+
+  let updatedEmbedUrl;
+  try {
+    const parsedUrl = new URL(embedUrl);
+    parsedUrl.searchParams.set("parent", appHost);
+    updatedEmbedUrl = parsedUrl.toString();
+  } catch (error) {
+    console.error("[ERROR] Invalid embed URL:", error.message);
+    return res.status(400).json({ error: "Invalid embed URL" });
+  }
 
   debugLog(`[DEBUG] Updated Embed URL with parent parameter: ${updatedEmbedUrl}`);
 
@@ -93,14 +101,17 @@ router.get("/get-mp4", async (req, res) => {
 
     try {
       debugLog("[DEBUG] Navigating to embed URL...");
-      await page.goto(updatedEmbedUrl, { waitUntil: "networkidle", timeout: navigationTimeout });
+      await page.goto(updatedEmbedUrl, { waitUntil: "domcontentloaded", timeout: navigationTimeout });
       debugLog("[DEBUG] Navigation successful");
     } catch (error) {
       console.error("[ERROR] Navigation error:", error.message);
+      if (error.name === "TimeoutError") {
+        return res.status(504).json({ error: "Timeout while loading Twitch embed URL" });
+      }
       return res.status(400).json({ error: "Invalid parent parameter or embed URL" });
     }
 
-    const waitTimeout = 120000; // Maximum time to wait for the MP4 URL (15 seconds)
+    const waitTimeout = 120000; // Maximum time to wait for the MP4 URL (120 seconds)
     const startTime = Date.now();
 
     while (!foundUrl) {
