@@ -26,8 +26,8 @@
       "type": "command",
       "commands": [
         "unzip -o twitch-clip-mate-main.zip",
-        "find . -maxdepth 1 -type d -name 'twitch-clip-*-main' -exec cp -a {}/. . \\;",
-        "find . -maxdepth 1 -type d -name 'twitch-clip-*-main' -exec rm -rf {} \\;"
+        "cp -a twitch-clip-mate-main/. .",
+        "rm -rf twitch-clip-mate-main"
       ]
     },
     {
