@@ -59,9 +59,9 @@ http://localhost:3000/api-docs
     - Example: `https://clips.twitch.tv/embed?clip=IncredulousBigCoyotePastaThat-mlf24oYJpnTA4C-v`
 - **Responses**:
   - `200`: Successfully retrieved the MP4 URL.
-  - `400`: Missing or invalid URL parameter.
-  - `404`: No `.mp4` URL found.
-  - `500`: Error executing the Playwright script.
+  - `400`: Missing or invalid URL parameter, or no clip slug found in it.
+  - `404`: Clip not found or has no playable MP4.
+  - `502`: Error querying Twitch's API.
 
 ---
 
@@ -92,7 +92,7 @@ http://localhost:3000/api-docs
 ## Technologies Used
 - **Node.js**: Backend runtime.
 - **Express**: Web framework for building the server.
-- **Playwright**: Browser automation for extracting MP4 URLs.
+- **Twitch GraphQL API**: Resolves clip MP4 URLs directly (no browser automation).
 - **Pug**: Template engine for rendering views.
 - **Swagger**: API documentation.
 - **Bootstrap**: Front-end styling for a responsive UI.
