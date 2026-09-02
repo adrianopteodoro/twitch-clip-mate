@@ -4,14 +4,12 @@ PufferPanel 3 template for deploying Twitch Clip Mate applications.
 
 ## Requirements
 
-- **Node.js** 16.0.0 or higher
+- **Node.js** 18.0.0 or higher
 - **npm** (comes with Node.js)
-- **Playwright Chromium** (automatically installed during setup)
 
 ## Features
 
 - Automated dependency installation
-- Automatic Playwright Chromium browser download
 - Configurable port (default: 3000)
 - Support for Docker, Linux, and Windows environments
 - Auto-restart on crashes
@@ -27,10 +25,8 @@ The template sets the following environment variables:
 
 ## Notes
 
-- The installation process includes downloading Chromium, which may take a few minutes on first run
 - The application requires internet access to fetch Twitch clip data
 - Make sure the configured port is not already in use
-- For Docker deployments, ensure sufficient disk space for Chromium installation (~200MB)
 
 ## Documentation
 
